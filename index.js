@@ -311,10 +311,10 @@ router.post('/users/:userId/cart',bodyParser.json(), (req, res)=> {
         }
         const prod = {
             product_id: stan.length+1,
-            title: "BLACKPINK - Official Lightstick (Ver. 2)",
-            category: "Lightstick",
-            description: "BLACKPINK - Official Lightstick (Ver. 2) Limited Edition",
-            image: "https://i.postimg.cc/MZcvSmfz/yg-select-pre-order-blackpink-official-light-stick-ver-2-limited-edition-16793113493584-800x-08d94bc.jpg",
+            title: "",
+            category: "",
+            description: "",
+            image: "",
             price: 1200,
             quantity: 100
         }
