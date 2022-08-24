@@ -47,17 +47,6 @@ router.post('/users/register', bodyParser.json(),(req, res)=>{
             
         } else {
             const bd = req.body;
-             // hash(bd.userpassword, 10).then((hash) => {
-                //set the password to hash value
-        //         (err, result) => {
-        //   if (err){
-        //    return res.status(400).send({msg: err})
-
-        //   }
-        //   return res.status(201).send({msg: "hash successful"})
-        //  }
-        //         bd.userpassword = hash
-        //       })
             let generateSalt = await bcrypt.genSalt();
             bd.userpassword = await bcrypt.hash(bd.userpassword, generateSalt);
             console.log(bd);
@@ -383,4 +372,5 @@ module.exports = {
     }
 }
 
- 
+//  asasasa
+// This is a test to see if I can commit
