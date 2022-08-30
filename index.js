@@ -65,19 +65,39 @@ router.post('/users/register', bodyParser.json(),(req, res)=>{
             // Query
             const strQry = 
             `
-            INSERT INTO users(fullname, email, userpassword, userRole, phone_number, join_date)
-            VALUES(?, ?, ?, ?, ?, ?);
-            `;
-            //
-            db.query(strQry, 
-                [bd.fullname, bd.email, bd.userpassword, bd.userRole, bd.phone_number, bd.join_date],
-                (err, results)=> {
-                    if(err) throw err;
-                    res.send(`number of affected row/s: ${results.affectedRows}`);
+            INSERT INTO users(firstname, lastname, gender, address,  userRole, email,  userpassword)
+             VALUES(?, ?, ?, ?, ?, ?, ?);
+            `
+          
+            
+            db.query(strQry, [bd.firstname, bd.lastname, bd.gender, bd.address, bd.userRole,  bd.email, bd.userpassword ], (err, results)=>{
+                    if(err) throw err
+                    const payload = {
+                        user: {
+                            firstname: bd.firstname,
+                            lastname: bd.lastname, 
+                            gender: bd.gender, 
+                            address: bd.address,  
+                            userRole: bd.userRole, 
+                            email: bd.email,  
+                            userpassword: bd.userpassword
+                        }
+                    };
+
+                    jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: "365d"}, (err, token)=>{
+                        if(err) throw err
+                        res.json({
+                            status: 200,
+                            msg: "Registration Successful",
+                            user: results,  
+                            token:token
+                        })  
+                    })
+                    // res.send(`number of affected row/s: ${results.affectedRows}`);
                 })
         }
     })
-})
+});
 
 
 
@@ -111,14 +131,18 @@ router.patch('/users/login', bodyParser.json(), (req, res)=> {
 
                 jwt.sign(payload,process.env.SECRET_KEY,{expiresIn: "365d"},(err, token) => {
                     if (err) throw err;
-                    res.send(token)
+                    res.json({
+                        status: 200,
+                        user: results,
+                        token:token
+                    })  
                   }
                 );  
             }
         }
 
     }) 
-})
+});
 
 
 // GET ALL USERS
@@ -126,7 +150,7 @@ router.get('/users', (req, res)=> {
     // Query
     const strQry = 
     `
-    SELECT userId, fullname, email, userpassword, userRole, phone_number, join_date
+    SELECT id, firstname, lastname, gender, address, userRole, email, userPassword
     FROM users;
     `;
     db.query(strQry, (err, results)=> {
