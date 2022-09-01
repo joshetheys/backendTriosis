@@ -34,7 +34,7 @@ app.listen(port, ()=> {console.log(`Server is running on port ${port}`)});
 
 
 // REGISTER USERS
-router.post('/users/register', bodyParser.json(),(req, res)=>{
+router.post('/users', bodyParser.json(),(req, res)=>{
     let emails = `SELECT email FROM users WHERE ?`;
     let email = {
         email: req.body.email
@@ -91,7 +91,7 @@ router.post('/users/register', bodyParser.json(),(req, res)=>{
 
 
 // LOGIN
-router.patch('/users/login', bodyParser.json(), (req, res)=> {
+router.patch('/users', bodyParser.json(), (req, res)=> {
     const strQry = `SELECT * FROM users WHERE ? ;`;
     let user = {
         email: req.body.email
