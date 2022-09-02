@@ -175,7 +175,7 @@ router.delete('/users/:userId', (req, res)=> {
     const strQry = 
     `
     DELETE FROM users 
-    WHERE userId = ?;
+    WHERE userRole = 'admin' & userId = ?;
     `;
     db.query(strQry,[req.params.userId], (err)=> {
         if(err) throw err;
@@ -260,7 +260,7 @@ router.get('/products/:product_id', (req, res)=> {
 });
 
 // GET CATERGORY
-router.get('/products/:category', (req, res)=> {
+router.get('/productsCategory/:category', (req, res)=> {
     // Query
     const strQry = 
     `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
@@ -278,7 +278,7 @@ router.get('/products/:category', (req, res)=> {
 });
 
 // GET TYPE
-router.get('/products/:type', (req, res)=> {
+router.get('/productsType/:type', (req, res)=> {
     // Query
     const strQry = 
     `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
@@ -336,7 +336,7 @@ router.get('/users/:userId/cart', (req, res)=> {
 //  Query
 const strQry =
 `
-SELECT * FROM users
+SELECT cart FROM users
 WHERE userID = ?;
 `;
 db.query(strQry,[req.params.userId], (err, data, fields)=> {
@@ -349,7 +349,7 @@ db.query(strQry,[req.params.userId], (err, data, fields)=> {
 router.post('/users/:userId/cart',bodyParser.json(), (req, res)=> {
     //  Query
     const strQry =
-    `SELECT * FROM users
+    `SELECT cart FROM users
      WHERE userID = ?;
     `;
     db.query(strQry,[req.params.userId], (err, data, fields)=> {
