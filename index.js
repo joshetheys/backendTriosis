@@ -259,6 +259,42 @@ router.get('/products/:product_id', (req, res)=> {
     })
 });
 
+// GET CATERGORY
+router.get('/products/:category', (req, res)=> {
+    // Query
+    const strQry = 
+    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    FROM products
+    WHERE category = ?;
+    `;
+    db.query(strQry, [req.params.category], (err, results)=> {
+        if(err) throw err;
+        res.setHeader('Access-Control-Allow-Origin','*')
+        res.json({
+            status: 200,
+            results: (results.length <= 0) ? "Sorry, no products were found." : results
+        })
+    })
+});
+
+// GET TYPE
+router.get('/products/:type', (req, res)=> {
+    // Query
+    const strQry = 
+    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    FROM products
+    WHERE type = ?;
+    `;
+    db.query(strQry, [req.params.type], (err, results)=> {
+        if(err) throw err;
+        res.setHeader('Access-Control-Allow-Origin','*')
+        res.json({
+            status: 200,
+            results: (results.length <= 0) ? "Sorry, no products were found." : results
+        })
+    })
+});
+
 
 
 
