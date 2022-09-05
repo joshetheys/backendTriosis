@@ -153,14 +153,14 @@ router.get('/users', (req, res)=> {
 });
 
 // GET ONE USER
-router.get('/users/:userId', (req, res)=> {
+router.get('/users/:id', (req, res)=> {
      // Query
     const strQry = 
-    `SELECT userId, fullname, email, userpassword, userRole, phone_number, join_date, cart
+    `SELECT id, fullname, email, userpassword, userRole, phone_number, join_date, cart
     FROM users
-    WHERE userId = ?;
+    WHERE id = ?;
     `;
-    db.query(strQry, [req.params.userId], (err, results) => {
+    db.query(strQry, [req.params.id], (err, results) => {
         if(err) throw err;
         res.setHeader('Access-Control-Allow-Origin','*')
         res.json({
@@ -171,14 +171,14 @@ router.get('/users/:userId', (req, res)=> {
 });
 
 // Delete a user 
-router.delete('/users/:userId', (req, res)=> {
+router.delete('/users/:id', (req, res)=> {
     const strQry = 
     `
     DELETE FROM users 
-    WHERE userRole = 'admin' & userId = ?;
+    WHERE userRole = 'admin' & id = ?;
     ALTER TABLE users AUTO_INCREMENT = 1;
     `;
-    db.query(strQry,[req.params.userId], (err)=> {
+    db.query(strQry,[req.params.id], (err)=> {
         if(err) throw err;
         res.status(200).json({msg: "You have deleted the user."});
     })
@@ -186,15 +186,15 @@ router.delete('/users/:userId', (req, res)=> {
 
 
 // Updating user
-router.put('/users/:userId', bodyParser.json(), (req, res)=> {
+router.put('/users/:id', bodyParser.json(), (req, res)=> {
     const bd = req.body;
     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
     }
     const strQry = 
     `UPDATE users
      SET ?
-     WHERE userId = ?`;
-    db.query(strQry,[bd, req.params.userId], (err, data)=> {
+     WHERE id = ?`;
+    db.query(strQry,[bd, req.params.id], (err, data)=> {
         if(err) throw err;
         res.send(`number of affected record/s: ${data.affectedRows}`);
     })
@@ -334,27 +334,27 @@ router.delete('/products/:productId', (req, res)=> {
 
 //CART
 //GET USER'S CART
-router.get('/users/:userId/cart', (req, res)=> {
+router.get('/users/:id/cart', (req, res)=> {
 //  Query
 const strQry =
 `
 SELECT cart FROM users
-WHERE userID = ?;
+WHERE id = ?;
 `;
-db.query(strQry,[req.params.userId], (err, data, fields)=> {
+db.query(strQry,[req.params.id], (err, data, fields)=> {
     if(err) throw err;
     res.send(data[0].cart);
 })
 } 
 );
 // ADD TO CART
-router.post('/users/:userId/cart',bodyParser.json(), (req, res)=> {
+router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
     //  Query
     const strQry =
     `SELECT cart FROM users
-     WHERE userID = ?;
+     WHERE id = ?;
     `;
-    db.query(strQry,[req.params.userId], (err, data, fields)=> {
+    db.query(strQry,[req.params.id], (err, data, fields)=> {
         if(err) throw err;
         let stan = [];
         if (data[0].cart != null) {
@@ -375,9 +375,9 @@ router.post('/users/:userId/cart',bodyParser.json(), (req, res)=> {
         const put =
         `
         UPDATE users SET cart = ?
-        WHERE userId = ?;
+        WHERE id = ?;
         `;
-        db.query(put, [JSON.stringify(stan), req.params.userId], (err, data, fields)=> {
+        db.query(put, [JSON.stringify(stan), req.params.id], (err, data, fields)=> {
             if(err) throw err;
             res.send(data);
         })
@@ -387,27 +387,27 @@ router.post('/users/:userId/cart',bodyParser.json(), (req, res)=> {
     ); 
 
 // DELETE WHOLE CART
-router.delete('/users/:userId/cart',bodyParser.json(), (req, res)=> {
+router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
     // Query
     const strQry = 
     `
         UPDATE users SET cart = null
-        WHERE userId = ?;
+        WHERE id = ?;
         `;
-    db.query(strQry,[req.params.userId], (err, data, fields)=> {
+    db.query(strQry,[req.params.id], (err, data, fields)=> {
         if(err) throw err;
         res.send(`${data.affectedRows} rows were affected`);
     })
 });
 // DELETE SPECIFIC ITEM CART
-router.delete('/users/:userId/cart/:product_id',bodyParser.json(), (req, res)=> {
+router.delete('/users/:id/cart/:product_id',bodyParser.json(), (req, res)=> {
     // Query
     const deleteProd = 
     `
         SELECT cart FROM users 
-        WHERE userId =${req.params.userId};
+        WHERE id =${req.params.id};
         `;
-    db.query(deleteProd,[req.params.userId], (err, data, fields)=> {
+    db.query(deleteProd,[req.params.id], (err, data, fields)=> {
         if(err) throw err;
         const deleted = JSON.parse(data[0].cart).filter((cart)=>{
             return cart.product_id != req.params.product_id;
@@ -418,7 +418,7 @@ router.delete('/users/:userId/cart/:product_id',bodyParser.json(), (req, res)=> 
         const end =
         `
         UPDATE users SET cart = ?
-        WHERE userId = ${req.params.userId}
+        WHERE id = ${req.params.id}
         `
         db.query(end, [JSON.stringify(deleted)], (err,results)=>{
             if(err) throw err;
