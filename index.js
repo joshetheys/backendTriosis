@@ -176,6 +176,7 @@ router.delete('/users/:userId', (req, res)=> {
     `
     DELETE FROM users 
     WHERE userRole = 'admin' & userId = ?;
+    ALTER TABLE users AUTO_INCREMENT = 1;
     `;
     db.query(strQry,[req.params.userId], (err)=> {
         if(err) throw err;
@@ -226,7 +227,7 @@ router.get('/products', (req, res)=> {
     // Query
     const strQry = 
     `
-    SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    SELECT productId, title, category, type, description, size, imgURL, quantity, price, createdBy
     FROM products; 
     `;
     db.query(strQry, (err, results)=> {
@@ -242,14 +243,14 @@ router.get('/products', (req, res)=> {
 
 
 // GET ONE PRODUCT
-router.get('/products/:product_id', (req, res)=> {
+router.get('/products/:productId', (req, res)=> {
     // Query
     const strQry = 
-    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    `SELECT productId, title, category, type, description, size, imgURL, quantity, price, createdBy
     FROM products
-    WHERE productID = ?;
+    WHERE productId = ?;
     `;
-    db.query(strQry, [req.params.productID], (err, results)=> {
+    db.query(strQry, [req.params.productId], (err, results)=> {
         if(err) throw err;
         res.setHeader('Access-Control-Allow-Origin','*')
         res.json({
@@ -263,7 +264,7 @@ router.get('/products/:product_id', (req, res)=> {
 router.get('/productsCategory/:category', (req, res)=> {
     // Query
     const strQry = 
-    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    `SELECT productId, title, category, type, description, size, imgURL, quantity, price, createdBy
     FROM products
     WHERE category = ?;
     `;
@@ -281,7 +282,7 @@ router.get('/productsCategory/:category', (req, res)=> {
 router.get('/productsType/:type', (req, res)=> {
     // Query
     const strQry = 
-    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    `SELECT productId, title, category, type, description, size, imgURL, quantity, price, createdBy
     FROM products
     WHERE type = ?;
     `;
@@ -299,15 +300,15 @@ router.get('/productsType/:type', (req, res)=> {
 
 
 // UPDATE PRODUCT
-router.put('/products/:productID', bodyParser.json(), (req, res)=> {
+router.put('/products/:productId', bodyParser.json(), (req, res)=> {
     const bd = req.body;
     // Query
     const strQry = 
     `UPDATE products
      SET ?
-     WHERE productID = ?`;
+     WHERE productId = ?`;
 
-     db.query(strQry, [bd, req.params.productID], (err, data)=> {
+     db.query(strQry, [bd, req.params.productId], (err, data)=> {
         if(err) throw err;
         res.send(`number of affected record/s: ${data.affectedRows}`);
     })
@@ -316,14 +317,15 @@ router.put('/products/:productID', bodyParser.json(), (req, res)=> {
 
 
 // DELETE PRODUCT
-router.delete('/products/:productID', (req, res)=> {
+router.delete('/products/:productId', (req, res)=> {
     // Query
     const strQry = 
     `
     DELETE FROM products 
-    WHERE productID = ?;
+    WHERE productId = ?;
+    ALTER TABLE products AUTO_INCREMENT = 1;
     `;
-    db.query(strQry,[req.params.productID], (err, data, fields)=> {
+    db.query(strQry,[req.params.productId], (err, data, fields)=> {
         if(err) throw err;
         res.send(`${data.affectedRows} rows were affected`);
     })
