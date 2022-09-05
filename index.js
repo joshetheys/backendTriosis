@@ -242,12 +242,12 @@ router.get('/products', (req, res)=> {
 
 
 // GET ONE PRODUCT
-router.get('/products/:product_id', (req, res)=> {
+router.get('/products/:productId', (req, res)=> {
     // Query
     const strQry = 
-    `SELECT productID, title, category, type, description, size, imgURL, quantity, price, createdBy
+    `SELECT productId, title, category, type, description, size, imgURL, quantity, price, createdBy
     FROM products
-    WHERE productID = ?;
+    WHERE productId = ?;
     `;
     db.query(strQry, [req.params.productID], (err, results)=> {
         if(err) throw err;
@@ -299,7 +299,7 @@ router.get('/productsType/:type', (req, res)=> {
 
 
 // UPDATE PRODUCT
-router.put('/products/:productID', bodyParser.json(), (req, res)=> {
+router.put('/products/:productId', bodyParser.json(), (req, res)=> {
     const bd = req.body;
     // Query
     const strQry = 
@@ -316,7 +316,7 @@ router.put('/products/:productID', bodyParser.json(), (req, res)=> {
 
 
 // DELETE PRODUCT
-router.delete('/products/:productID', (req, res)=> {
+router.delete('/products/:productId', (req, res)=> {
     // Query
     const strQry = 
     `
