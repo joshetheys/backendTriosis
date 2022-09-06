@@ -114,7 +114,9 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
                   };
                 jwt.sign(payload,process.env.SECRET_KEY,{expiresIn: "365d"},(err, token) => {
                     if (err) throw err;
-                    res.send(token)
+                    res.json({
+                        token:token
+                    })
                   }
                 );
             }
