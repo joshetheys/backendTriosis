@@ -60,12 +60,11 @@ router.post('/users', bodyParser.json(),(req, res)=>{
             `
           
             
-            db.query(strQry, [bd.fullnames, bd.userRole,  bd.email, bd.userpassword ], (err, results)=>{
+            db.query(strQry, [bd.fullnames, bd.email, bd.userpassword ], (err, results)=>{
                     if(err) throw err
                     const payload = {
                         user: {
-                            fullnames: bd.fullnames,  
-                            userRole: bd.userRole, 
+                            fullnames: bd.fullnames, 
                             email: bd.email,  
                             userpassword: bd.userpassword
                         }
@@ -76,7 +75,7 @@ router.post('/users', bodyParser.json(),(req, res)=>{
                         res.json({
                             status: 200,
                             msg: "Registration Successful",
-                            user: results,  
+                            results: results,  
                             token:token
                         })  
                     })
@@ -131,7 +130,7 @@ router.get('/users', (req, res)=> {
     // Query
     const strQry = 
     `
-    SELECT id, fullnames, userRole, email, userPassword
+    SELECT id, fullnames, userRole, email, userpassword
     FROM users;
     `;
     db.query(strQry, (err, results)=> {
@@ -167,7 +166,7 @@ router.delete('/users/:id', (req, res)=> {
     const strQry = 
     `
     DELETE FROM users 
-    WHERE userRole = 'admin' & id = ?;
+    WHERE id = ?;
     ALTER TABLE users AUTO_INCREMENT = 1;
     `;
     db.query(strQry,[req.params.id], (err)=> {
