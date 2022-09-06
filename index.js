@@ -109,12 +109,11 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
             } else {
                 const payload = {
                     user: {
-                      fullname: results[0].fullname,
+                      fullnames: results[0].fullnames,
+                      userRole: results[0].userRole,
                       email: results[0].email,
                       userpassword: results[0].userpassword,
-                      userRole: results[0].userRole,
-                      phone_number: results[0].phone_number,
-                      join_date: results[0].join_date,
+                      cart: results[0].cart,
                     },
                   };
 
@@ -139,7 +138,7 @@ router.get('/users', (req, res)=> {
     // Query
     const strQry = 
     `
-    SELECT id, firstname, lastname, gender, address, userRole, email, userPassword
+    SELECT id, fullnames, userRole, email, userPassword
     FROM users;
     `;
     db.query(strQry, (err, results)=> {
@@ -156,7 +155,7 @@ router.get('/users', (req, res)=> {
 router.get('/users/:id', (req, res)=> {
      // Query
     const strQry = 
-    `SELECT id, fullname, email, userpassword, userRole, phone_number, join_date, cart
+    `SELECT id, fullnames, email, userpassword, userRole, cart
     FROM users
     WHERE id = ?;
     `;
