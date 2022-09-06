@@ -54,19 +54,16 @@ router.post('/users', bodyParser.json(),(req, res)=>{
             // Query
             const strQry = 
             `
-            INSERT INTO users(firstname, lastname, gender, address,  userRole, email,  userpassword)
-             VALUES(?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO users(fullnames, email,  userpassword)
+             VALUES(?, ?, ?);
             `
           
             
-            db.query(strQry, [bd.firstname, bd.lastname, bd.gender, bd.address, bd.userRole,  bd.email, bd.userpassword ], (err, results)=>{
+            db.query(strQry, [bd.fullnames, bd.userRole,  bd.email, bd.userpassword ], (err, results)=>{
                     if(err) throw err
                     const payload = {
                         user: {
-                            firstname: bd.firstname,
-                            lastname: bd.lastname, 
-                            gender: bd.gender, 
-                            address: bd.address,  
+                            fullnames: bd.fullnames,  
                             userRole: bd.userRole, 
                             email: bd.email,  
                             userpassword: bd.userpassword
@@ -91,21 +88,19 @@ router.post('/users', bodyParser.json(),(req, res)=>{
 
 
 // LOGIN
-router.patch('/users', bodyParser.json(), (req, res)=> {
+router.post('/login', bodyParser.json(), (req, res)=> {
     const strQry = `SELECT * FROM users WHERE ? ;`;
     let user = {
         email: req.body.email
     };
-
     db.query(strQry, user, async(err, results)=> {
         if (err) throw err;
-
         if (results.length === 0) {
-            res.send('The email entered is not registered in our system. Please try to register.')
+            res.send('Email not found. Please register')
         } else {
             const isMatch = await bcrypt.compare(req.body.userpassword, results[0].userpassword);
             if (!isMatch) {
-                res.send('The password entered is incorrect.')
+                res.send('Password is Incorrect')
             } else {
                 const payload = {
                     user: {
@@ -113,24 +108,18 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
                       userRole: results[0].userRole,
                       email: results[0].email,
                       userpassword: results[0].userpassword,
-                      cart: results[0].cart,
+                      cart : results[0].cart,
                     },
                   };
-
                 jwt.sign(payload,process.env.SECRET_KEY,{expiresIn: "365d"},(err, token) => {
                     if (err) throw err;
-                    res.json({
-                        status: 200,
-                        user: results,
-                        token:token
-                    })  
+                    res.send(token)
                   }
-                );  
+                );
             }
         }
-
-    }) 
-});
+    })
+})
 
 
 // GET ALL USERS
