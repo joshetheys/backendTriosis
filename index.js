@@ -88,7 +88,7 @@ router.post('/users', bodyParser.json(),(req, res)=>{
 
 
 // LOGIN
-router.post('/login', bodyParser.json(), (req, res)=> {
+router.patch('/users', bodyParser.json(), (req, res)=> {
     const strQry = `SELECT * FROM users WHERE ? ;`;
     let user = {
         email: req.body.email
