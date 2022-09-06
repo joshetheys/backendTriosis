@@ -102,12 +102,6 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
             if (!isMatch) {
                 res.send('Password is Incorrect')
             } else {
-                if (
-                    bcrypt.compare(
-                    req.body.userPassword,
-                    results[0].userPassword
-                  , (err, veri) =>{
-                      if (veri) {
                 const payload = {
                     user: {
                       fullnames: results[0].fullnames,
@@ -120,12 +114,12 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
                 jwt.sign(payload,process.env.SECRET_KEY,{expiresIn: "365d"},(err, token) => {
                     if (err) throw err;
                     res.send(token)
-                });
+                  }
+                );
             }
-            })
-     );
-   }}
-   })
+        }
+    })
+})
 
 
 // GET ALL USERS
