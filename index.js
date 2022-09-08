@@ -325,19 +325,41 @@ router.delete('/products/:productId', (req, res)=> {
 
 //CART
 //GET USER'S CART
-router.get('/users/:id/cart', (req, res)=> {
+// router.get('/users/:id/cart', (req, res)=> {
 //  Query
-const strQry =
-`
-SELECT cart FROM users
-WHERE id = ?;
-`;
-db.query(strQry,[req.params.id], (err, data, fields)=> {
-    if(err) throw err;
-    res.send(data[0].cart);
+// const strQry =
+// `
+// SELECT cart FROM users
+// WHERE id = ?;
+// `;
+// db.query(strQry,[req.params.id], (err, data, fields)=> {
+//     if(err) throw err;
+//     res.send(data[0].cart);
+// })
+// } 
+// );
+
+// GET CART PRODUCTS
+router.get('/users/:id/cart', (req, res)=>{
+  const cart = `
+      SELECT cart FROM users
+      WHERE id = ${req.params.id}
+  `
+  db.query(cart, (err, results)=>{
+      if (err) throw err
+      if (results[0].cart !== null) {
+          res.json({
+              status: 200,
+              cart: JSON.parse(results[0].cart)
+          })
+      } else {
+          res.json({
+              status: 404,
+              message: 'There is no items in your cart'
+          })
+      }
+  })
 })
-} 
-);
 // ADD TO CART
 router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
     //  Query
@@ -352,13 +374,15 @@ router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
             stan = JSON.parse(data[0].cart)
         }
         const prod = {
-            product_id: stan.length+1,
+            productId: stan.length+1,
             title: "",
             category: "",
+            type: "",
             description: "",
-            image: "",
-            price: 1200,
-            quantity: 100
+            size: "",
+            imgURL: "",
+            quantity: 100,
+            price: 1200
         }
         stan.push(prod)
         // res.send(stan);
@@ -391,7 +415,7 @@ router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
     })
 });
 // DELETE SPECIFIC ITEM CART
-router.delete('/users/:id/cart/:product_id',bodyParser.json(), (req, res)=> {
+router.delete('/users/:id/cart/:productId',bodyParser.json(), (req, res)=> {
     // Query
     const deleteProd = 
     `
@@ -401,10 +425,10 @@ router.delete('/users/:id/cart/:product_id',bodyParser.json(), (req, res)=> {
     db.query(deleteProd,[req.params.id], (err, data, fields)=> {
         if(err) throw err;
         const deleted = JSON.parse(data[0].cart).filter((cart)=>{
-            return cart.product_id != req.params.product_id;
+            return cart.productId != req.params.productId;
         })
         deleted.forEach((cart, i)=> {
-            cart.product_id = i + 1
+            cart.productId = i + 1
         });
         const end =
         `
