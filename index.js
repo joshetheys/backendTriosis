@@ -497,11 +497,11 @@ router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
 // });
 //DELETE SINGLE CART
 router.delete('/users/:id/cart/:cartId', (req,res)=>{
-    const delSingleCartProd = `
+    const deleteProduct = `
         SELECT cart FROM users 
-        WHERE user_id = ${req.params.id}
+        WHERE id = ?
     `
-    db.query(delSingleCartProd, (err,results)=>{
+    db.query(deleteProduct, (err,results)=>{
         if(err) throw err;
 
         if(results.length > 0){
@@ -515,7 +515,7 @@ router.delete('/users/:id/cart/:cartId', (req,res)=>{
                 const query = `
                     UPDATE users 
                     SET cart = ? 
-                    WHERE user_id = ${req.params.id}
+                    WHERE id = ?
                 `;
 
                 db.query(query, [JSON.stringify(result)], (err,results)=>{
