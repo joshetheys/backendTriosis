@@ -468,33 +468,79 @@ router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
     })
 });
 // DELETE SPECIFIC ITEM CART
-router.delete('/users/:id/cart/:productId',bodyParser.json(), (req, res)=> {
+// router.delete('/users/:id/cart/:productId',bodyParser.json(), (req, res)=> {
     // Query
-    const deleteProd = 
-    `
-        SELECT cart FROM users 
-        WHERE id =${req.params.id};
-        `;
-    db.query(deleteProd,[req.params.id], (err, data, fields)=> {
-        if(err) throw err;
-        const deleted = JSON.parse(data[0].cart).filter((cart)=>{
-            return cart.productId != req.params.productId;
-        })
-        deleted.forEach((cart, i)=> {
-            cart.productId = i + 1
-        });
-        const end =
-        `
-        UPDATE users SET cart = ?
-        WHERE id = ${req.params.id}
-        `
-        db.query(end, [JSON.stringify(deleted)], (err,results)=>{
-            if(err) throw err;
-            res.send(`${data.affectedRows} rows were affected`);
-        })
+//     const deleteProd = 
+//     `
+//         SELECT cart FROM users 
+//         WHERE id =${req.params.id};
+//         `;
+//     db.query(deleteProd,[req.params.id], (err, data, fields)=> {
+//         if(err) throw err;
+//         const deleted = JSON.parse(data[0].cart).filter((cart)=>{
+//             return cart.productId != req.params.productId;
+//         })
+//         deleted.forEach((cart, i)=> {
+//             cart.productId = i + 1
+//         });
+//         const end =
+//         `
+//         UPDATE users SET cart = ?
+//         WHERE id = ${req.params.id}
+//         `
+//         db.query(end, [JSON.stringify(deleted)], (err,results)=>{
+//             if(err) throw err;
+//             res.send(`${data.affectedRows} rows were affected`);
+//         })
         
+//     })
+// });
+//DELETE SINGLE CART
+router.delete('/users/:id/cart/:cartId', (req,res)=>{
+    const delSingleCartProd = `
+        SELECT cart FROM users 
+        WHERE user_id = ${req.params.id}
+    `
+    db.query(delSingleCartProd, (err,results)=>{
+        if(err) throw err;
+
+        if(results.length > 0){
+            if(results[0].cart != null){
+                const result = JSON.parse(results[0].cart).filter((Cart)=>{
+                    return Cart.cart_id != req.params.cartId;
+                })
+                result.forEach((cart,i) => {
+                    cart.cart_id = i + 1
+                });
+                const query = `
+                    UPDATE users 
+                    SET cart = ? 
+                    WHERE user_id = ${req.params.id}
+                `;
+
+                db.query(query, [JSON.stringify(result)], (err,results)=>{
+                    if(err) throw err;
+                    res.json({
+                        status:200,
+                        result: "Successfully deleted the selected item from cart"
+                    });
+                })
+
+            }else{
+                res.json({
+                    status:400,
+                    result: "This user has an empty cart"
+                })
+            }
+        }else{
+            res.json({
+                status:400,
+                result: "There is no user with that id"
+            });
+        }
     })
-});
+
+})
  
 module.exports = {
     devServer: {
