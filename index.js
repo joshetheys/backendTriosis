@@ -361,45 +361,98 @@ router.get('/users/:id/cart', (req, res)=>{
   })
 })
 // ADD TO CART
-router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
+// router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
     //  Query
-    const strQry =
-    `SELECT cart FROM users
-     WHERE id = ?;
-    `;
-    db.query(strQry,[req.params.id], (err, data, fields)=> {
-        if(err) throw err;
-        let stan = [];
-        if (data[0].cart != null) {
-            stan = JSON.parse(data[0].cart)
-        }
-        const prod = {
-            productId: stan.length+1,
-            title: "",
-            category: "",
-            type: "",
-            description: "",
-            size: "",
-            imgURL: "",
-            quantity: 100,
-            price: 1200
-        }
-        stan.push(prod)
-        // res.send(stan);
-        // Query
-        const put =
-        `
-        UPDATE users SET cart = ?
-        WHERE id = ?;
-        `;
-        db.query(put, [JSON.stringify(stan), req.params.id], (err, data, fields)=> {
-            if(err) throw err;
-            res.send(data);
+    // const strQry =
+    // `SELECT cart FROM users
+    //  WHERE id = ?;
+    // `;
+    // db.query(strQry,[req.params.id], (err, data, fields)=> {
+    //     if(err) throw err;
+    //     let stan = [];
+    //     if (data[0].cart != null) {
+    //         stan = JSON.parse(data[0].cart)
+    //     }
+    //     const prod = {
+    //         productId: stan.length+1,
+    //         title: "",
+    //         category: "",
+    //         type: "",
+    //         description: "",
+    //         size: "",
+    //         imgURL: "",
+    //         quantity: 100,
+    //         price: 1200
+    //     }
+    //     stan.push(prod)
+    //     // res.send(stan);
+    //     // Query
+    //     const put =
+    //     `
+    //     UPDATE users SET cart = ?
+    //     WHERE id = ?;
+    //     `;
+    //     db.query(put, [JSON.stringify(stan), req.params.id], (err, data, fields)=> {
+    //         if(err) throw err;
+    //         res.send(data);
+    //     })
+    // })
+  
+    // } 
+    // ); 
+
+    router.post('/users/:id/cart', bodyParser.json(),(req, res)=>{
+        let route = req.params
+        const cart = `select cart from users where id = ${route.id}`
+        db.query(cart,(err, results)=>{
+            if(err)throw err
+            if(results.length > 0 ){
+                let cart
+                if(results[0].cart == null){
+                    cart = []
+                    
+                }else{
+                    cart = JSON.parse(results[0].cart)
+                }
+            let product = {
+                //         title: "",
+                //         category: "",
+                //         type: "",
+                //         description: "",
+                //         size: "",
+                //         imgURL: "",
+                //         quantity: 100,
+                //         price: 1200
+                'cart_id' : cart.length + 1, 
+                'title' : req.body.title,
+                'category':  req.body.category,
+                'type':  req.body.type,
+                'description': req.body.description,
+                'size': req.body.size,
+                'imgURL': req.body.imgURL,
+                'quantity': parseInt(req.body.quantity) -1,
+                'price': req.body.price,
+                'createdBy':req.body.createdBy
+    
+    
+            }
+            cart.push(product)
+            const addCart = `update users set cart = ? where id = ${req.params.id}`
+            db.query (addCart, JSON.stringify(cart), (err, results)=>{
+                if(err)throw err 
+                res.json ({
+                    status: 200,
+                    message: 'successfully added item'
+                })
+            })
+            } else{
+                res.json({
+                    status: 404,
+                    message: 'there is no user with that id'
+                })
+            }
         })
     })
-  
-    } 
-    ); 
 
 // DELETE WHOLE CART
 router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
