@@ -205,7 +205,7 @@ router.post('/products', bodyParser.json(), (req, res)=> {
         [bd.title, bd.category, bd.type, bd.description, bd.size, bd.imgURL, bd.quantity, bd.price, bd.created_by],
         (err, results)=> {
             if(err) throw err;
-            res.status(201).send(`number of affected row/s: ${results.affectedRows}`);
+            res.json({msg:"You added a new product"});
         })
 });
 
