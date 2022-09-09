@@ -96,11 +96,11 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
     db.query(strQry, user, async(err, results)=> {
         if (err) throw err;
         if (results.length === 0) {
-            res.send('Email not found. Please register')
+            res.json({msg:"Email not found. Please register"})
         } else {
             const isMatch = await bcrypt.compare(req.body.userpassword, results[0].userpassword);
             if (!isMatch) {
-                res.send('Password is Incorrect')
+                res.json({msg:"Password is Incorrect"})
             } else {
                 const payload = {
                     user: {
