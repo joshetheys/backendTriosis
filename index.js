@@ -198,7 +198,7 @@ router.post('/products', bodyParser.json(), (req, res)=> {
     const strQry = 
     `
     INSERT INTO products(title, category, type, description, size, imgURL, quantity, price, createdBy)
-    VALUES(?, ?, ?, ?, ?, ?, ?);
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
     //
     db.query(strQry, 
