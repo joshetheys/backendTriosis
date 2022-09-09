@@ -291,19 +291,19 @@ router.get('/productsType/:type', (req, res)=> {
 
 
 // UPDATE PRODUCT
-router.put('/products/:productId', bodyParser.json(), (req, res)=> {
-    const bd = req.body;
-    // Query
-    const strQry = 
-    `UPDATE products
-     SET ?
-     WHERE productId = ?`;
+// router.put('/products/:productId', bodyParser.json(), (req, res)=> {
+//     const bd = req.body;
+//     // Query
+//     const strQry = 
+//     `UPDATE products
+//      SET ?
+//      WHERE productId = ?`;
 
-     db.query(strQry, [bd, req.params.productId], (err, data)=> {
-        if(err) throw err;
-        res.send(`number of affected record/s: ${data.affectedRows}`);
-    })
-});
+//      db.query(strQry, [bd, req.params.productId], (err, data)=> {
+//         if(err) throw err;
+//         res.send(`number of affected record/s: ${data.affectedRows}`);
+//     })
+// });
 
 // UPDATE PRODUCT
 // router.put('/products/:productId', bodyParser.json(), (req, res) => {
@@ -332,7 +332,7 @@ router.put('/products/:productId', bodyParser.json(), (req, res)=> {
 //     );
 //   });
 
-// DELETE PRODUCT
+//DELETE PRODUCT
 router.delete('/products/:productId', (req, res)=> {
     // Query
     const strQry = 
@@ -346,6 +346,33 @@ router.delete('/products/:productId', (req, res)=> {
         res.send("Deleted");
     })
 });
+
+
+router.put("/products/:productId", bodyParser.json(), (req, res) => {
+    try {
+        const {
+            productId, title, category, type, description, size, imgURL, quantity, price, createdBy
+        } = req.body
+        const str = `UPDATE products SET ? WHERE productId = ${req.params.productId}`
+
+        const product = {
+            // bd.
+            productId, title, category, type, description, size, imgURL, quantity, price, createdBy
+        }
+
+        con.query(str, product, (err, results) => {
+            if (err) throw err;
+
+            res.json({
+                results,
+                msg: "updated product"
+            })
+        })
+    } catch (error) {
+        throw error
+    }
+});
+
 
 
 //CART
