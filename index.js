@@ -291,46 +291,46 @@ router.get('/productsType/:type', (req, res)=> {
 
 
 // UPDATE PRODUCT
-// router.put('/products/:productId', bodyParser.json(), (req, res)=> {
-//     const bd = req.body;
-//     // Query
-//     const strQry = 
-//     `UPDATE products
-//      SET ?
-//      WHERE productId = ?`;
+router.put('/products/:productId', bodyParser.json(), (req, res)=> {
+    const bd = req.body;
+    // Query
+    const strQry = 
+    `UPDATE products
+     SET ?
+     WHERE productId = ?`;
 
-//      db.query(strQry, [bd, req.params.productId], (err, data)=> {
-//         if(err) throw err;
-//         res.send(`number of affected record/s: ${data.affectedRows}`);
-//     })
-// });
+     db.query(strQry, [bd, req.params.productId], (err, data)=> {
+        if(err) throw err;
+        res.send(`number of affected record/s: ${data.affectedRows}`);
+    })
+});
 
 // UPDATE PRODUCT
-router.put('/products/:productId', bodyParser.json(), (req, res) => {
-    const editProduct = `
-          UPDATE products
-          SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
-          WHERE productId = ?
-      `;
+// router.put('/products/:productId', bodyParser.json(), (req, res) => {
+//     const editProduct = `
+//           UPDATE products
+//           SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
+//           WHERE productId = ?
+//       `;
   
-    db.query(
-      editProduct,
-      [
-        req.body.title,
-        req.body.imgURL,
-        req.body.quantity,
-        req.body.price,
-        req.body.createdBy
-      ],
-      (err, results) => {
-        if (err) throw err;
-        res.json({
-          status: 200,
-          results: "The product has been edited succesfully",
-        });
-      }
-    );
-  });
+//     db.query(
+//       editProduct,
+//       [
+//         req.body.title,
+//         req.body.imgURL,
+//         req.body.quantity,
+//         req.body.price,
+//         req.body.createdBy
+//       ],
+//       (err, results) => {
+//         if (err) throw err;
+//         res.json({
+//           status: 200,
+//           results: "The product has been edited succesfully",
+//         });
+//       }
+//     );
+//   });
 
 // DELETE PRODUCT
 router.delete('/products/:productId', (req, res)=> {
