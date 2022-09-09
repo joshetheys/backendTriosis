@@ -306,31 +306,31 @@ router.get('/productsType/:type', (req, res)=> {
 // });
 
 // UPDATE PRODUCT
-// router.put('/products/:productId', bodyParser.json(), (req, res) => {
-//     const editProduct = `
-//           UPDATE products
-//           SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
-//           WHERE productId = ?
-//       `;
+router.put('/products/:productId', bodyParser.json(), (req, res) => {
+    const editProduct = `
+          UPDATE products
+          SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
+          WHERE productId = ?
+      `;
   
-//     db.query(
-//       editProduct,
-//       [
-//         req.body.title,
-//         req.body.imgURL,
-//         req.body.quantity,
-//         req.body.price,
-//         req.body.createdBy
-//       ],
-//       (err, results) => {
-//         if (err) throw err;
-//         res.json({
-//           status: 200,
-//           results: "The product has been edited succesfully",
-//         });
-//       }
-//     );
-//   });
+    db.query(
+      editProduct,
+      [
+        req.body.title,
+        req.body.imgURL,
+        req.body.quantity,
+        req.body.price,
+        req.body.createdBy
+      ],
+      (err, results) => {
+        if (err) throw err;
+        res.json({
+          status: 200,
+          results: "The product has been edited succesfully",
+        });
+      }
+    );
+  });
 
 //DELETE PRODUCT
 router.delete('/products/:productId', (req, res)=> {
@@ -348,30 +348,30 @@ router.delete('/products/:productId', (req, res)=> {
 });
 
 
-router.put("/products/:productId", bodyParser.json(), (req, res) => {
-    try {
-        const {
-            productId, title, category, type, description, size, imgURL, quantity, price, createdBy
-        } = req.body
-        const str = `UPDATE products SET ? WHERE productId = ${req.params.productId}`
+// router.put("/products/:productId", bodyParser.json(), (req, res) => {
+//     try {
+//         const {
+//             productId, title, category, type, description, size, imgURL, quantity, price, createdBy
+//         } = req.body
+//         const str = `UPDATE products SET ? WHERE productId = ${req.params.productId}`
 
-        const product = {
-            // bd.
-            productId, title, category, type, description, size, imgURL, quantity, price, createdBy
-        }
+//         const product = {
+//             // bd.
+//             productId, title, category, type, description, size, imgURL, quantity, price, createdBy
+//         }
 
-        con.query(str, product, (err, results) => {
-            if (err) throw err;
+//         db.query(str, product, (err, results) => {
+//             if (err) throw err;
 
-            res.json({
-                results,
-                msg: "updated product"
-            })
-        })
-    } catch (error) {
-        throw error
-    }
-});
+//             res.json({
+//                 results,
+//                 msg: "updated product"
+//             })
+//         })
+//     } catch (error) {
+//         throw error
+//     }
+// });
 
 
 
