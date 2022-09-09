@@ -306,11 +306,11 @@ router.get('/productsType/:type', (req, res)=> {
 // });
 
 // UPDATE PRODUCT
-router.put('/products/:productId', bodyParser.json(), (req, res) => {
+router.put('/products/:id', bodyParser.json(), (req, res) => {
     const editProduct = `
           UPDATE products
           SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
-          WHERE productId = ?
+          WHERE productId = ${req.params.id}
       `;
   
     db.query(
