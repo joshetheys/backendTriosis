@@ -310,7 +310,7 @@ router.put('/products/:productId', bodyParser.json(), (req, res) => {
     const editProduct = `
           UPDATE products
           SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
-          WHERE id = ${req.params.id}
+          WHERE productId = ?
       `;
   
     db.query(
