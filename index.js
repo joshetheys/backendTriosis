@@ -343,7 +343,7 @@ router.delete('/products/:productId', (req, res)=> {
     `;
     db.query(strQry, (err, results)=> {
         if(err) throw err;
-        res.send("Deleted");
+        res.json({msg:"Deleted"});
     })
 });
 
