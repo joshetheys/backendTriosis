@@ -192,28 +192,48 @@ router.delete('/users/:id', (req, res)=> {
 //     })
 // });
 
-router.put('/users/:id', bodyParser.json(), (req, res) => {
+// router.put('/users/:id', bodyParser.json(), (req, res) => {
 
-    if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
-    }
+//     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
+//     }
+//     const editUser = `
+//           UPDATE users
+//           SET  fullnames = ?, email = ?,  userpassword = ? 
+//           WHERE id = ${req.params.id}
+//       `;
+  
+//     db.query(
+//         editUser,
+//       [
+//         req.body.fullnames,
+//         req.body.email,
+//         req.body.userpassword,
+//       ],
+//       (err, results) => {
+//         if (err) throw err;
+//         res.json({
+//           status: 200,
+//           results: "The user has been edited succesfully",
+//         });
+//       }
+//     );
+//   });
+
+  router.put("/users/:id", bodyParser.json(), (req, res) => {
     const editUser = `
           UPDATE users
-          SET  fullnames = ?, email = ?,  userpassword = ? 
+          SET fullnames = ?, email = ?
           WHERE id = ${req.params.id}
       `;
   
     db.query(
-        editUser,
-      [
-        req.body.fullnames,
-        req.body.email,
-        req.body.userpassword,
-      ],
+      editUser,
+      [req.body.fullnames, req.body.email],
       (err, results) => {
         if (err) throw err;
         res.json({
           status: 200,
-          results: "The user has been edited succesfully",
+          results: "The user has been successfully edited",
         });
       }
     );
