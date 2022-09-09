@@ -177,20 +177,47 @@ router.delete('/users/:id', (req, res)=> {
 
 
 // Updating user
-router.put('/users/:id', bodyParser.json(), (req, res)=> {
-    const bd = req.body;
+// router.put('/users/:id', bodyParser.json(), (req, res)=> {
+//     const bd = req.body;
+//     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
+//     }
+//     const strQry = 
+//     `UPDATE users
+//      SET ?
+//      WHERE id = ?`;
+//     db.query(strQry,[bd, req.params.id], (err, data)=> {
+//         if(err) throw err;
+
+//          res.status(200).json({msg: "You have updated the user."});
+//     })
+// });
+
+router.put('/users/:id', bodyParser.json(), (req, res) => {
+
     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
     }
-    const strQry = 
-    `UPDATE users
-     SET ?
-     WHERE id = ?`;
-    db.query(strQry,[bd, req.params.id], (err, data)=> {
-        if(err) throw err;
-
-         res.status(200).json({msg: "You have updated the user."});
-    })
-});
+    const editUser = `
+          UPDATE users
+          SET  fullnames = ?, email = ?,  userpassword = ? 
+          WHERE id = ${req.params.id}
+      `;
+  
+    db.query(
+        editUser,
+      [
+        req.body.fullnames,
+        req.body.email,
+        req.body.userpassword,
+      ],
+      (err, results) => {
+        if (err) throw err;
+        res.json({
+          status: 200,
+          results: "The user has been edited succesfully",
+        });
+      }
+    );
+  });
 // CREATE PRODUCT
 router.post('/products', bodyParser.json(), (req, res)=> {
     const bd = req.body; 
