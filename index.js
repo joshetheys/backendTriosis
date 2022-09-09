@@ -308,7 +308,7 @@ router.get('/productsType/:type', (req, res)=> {
 // UPDATE PRODUCT
 router.put('/products/:productId', bodyParser.json(), (req, res) => {
     const editProduct = `
-          UPDATE bookings
+          UPDATE products
           SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
           WHERE id = ${req.params.id}
       `;
@@ -338,12 +338,12 @@ router.delete('/products/:productId', (req, res)=> {
     const strQry = 
     `
     DELETE FROM products 
-    WHERE productId = ?;
+    WHERE productId = ${req.params.productId};
     ALTER TABLE products AUTO_INCREMENT = 1;
     `;
-    db.query(strQry,[req.params.productId], (err, data, fields)=> {
+    db.query(strQry, (err, results)=> {
         if(err) throw err;
-        res.send(`${data.affectedRows} rows were affected`);
+        res.send("Deleted");
     })
 });
 
