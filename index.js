@@ -187,7 +187,8 @@ router.put('/users/:id', bodyParser.json(), (req, res)=> {
      WHERE id = ?`;
     db.query(strQry,[bd, req.params.id], (err, data)=> {
         if(err) throw err;
-        res.send(`number of affected record/s: ${data.affectedRows}`);
+
+         res.status(200).json({msg: "You have updated the user."});
     })
 });
 // CREATE PRODUCT
