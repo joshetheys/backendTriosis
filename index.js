@@ -55,16 +55,16 @@ router.post('/users', bodyParser.json(),(req, res)=>{
             // Query
             const strQry = 
             `
-            INSERT INTO users(fullnamess, email,  userpassword)
+            INSERT INTO users(fullnames, email,  userpassword)
              VALUES(?, ?, ?);
             `
           
             
-            db.query(strQry, [bd.fullnamess, bd.email, bd.userpassword ], (err, results)=>{
+            db.query(strQry, [bd.fullnames, bd.email, bd.userpassword ], (err, results)=>{
                     if(err) throw err
                     const payload = {
                         user: {
-                            fullnamess: bd.fullnamess, 
+                            fullnames: bd.fullnames, 
                             email: bd.email,  
                             userpassword: bd.userpassword
                         }
@@ -104,7 +104,7 @@ router.patch('/users', bodyParser.json(), (req, res)=> {
             } else {
                 const payload = {
                     user: {
-                      fullnamess: results[0].fullnamess,
+                      fullnames: results[0].fullnames,
                       userRole: results[0].userRole,
                       email: results[0].email,
                       userpassword: results[0].userpassword,
@@ -130,7 +130,7 @@ router.get('/users', (req, res)=> {
     // Query
     const strQry = 
     `
-    SELECT id, fullnamess, userRole, email, userpassword
+    SELECT id, fullnames, userRole, email, userpassword
     FROM users;
     `;
     db.query(strQry, (err, results)=> {
@@ -147,7 +147,7 @@ router.get('/users', (req, res)=> {
 router.get('/users/:id', (req, res)=> {
      // Query
     const strQry = 
-    `SELECT id, fullnamess, email, userpassword, userRole, cart
+    `SELECT id, fullnames, email, userpassword, userRole, cart
     FROM users
     WHERE id = ?;
     `;
@@ -198,14 +198,14 @@ router.delete('/users/:id', (req, res)=> {
 //     }
 //     const editUser = `
 //           UPDATE users
-//           SET  fullnamess = ?, email = ?,  userpassword = ? 
+//           SET  fullnames = ?, email = ?,  userpassword = ? 
 //           WHERE id = ${req.params.id}
 //       `;
   
 //     db.query(
 //         editUser,
 //       [
-//         req.body.fullnamess,
+//         req.body.fullnames,
 //         req.body.email,
 //         req.body.userpassword,
 //       ],
@@ -219,46 +219,47 @@ router.delete('/users/:id', (req, res)=> {
 //     );
 //   });
 
-//   router.put("/users/:id", bodyParser.json(), (req, res) => {
-//     const editUser = `
-//           UPDATE users 
-//           SET ? WHERE id = ${req.params.id}
-//       `;
+  router.put("/users/:id", bodyParser.json(), (req, res) => {
+    const editUser = `
+          UPDATE users
+          SET fullnames = ?, email = ?
+          WHERE id = ${req.params.id}
+      `;
   
-//     db.query(
-//       editUser,
-//       [req.body.fullnamess, req.body.email],
-//       (err, results) => {
-//         if (err) throw err;
-//         res.json({
-//           status: 200,
-//           results: "The user has been successfully edited",
-//         });
-//       }
-//     );
-//   });
+    db.query(
+      editUser,
+      [req.body.fullnames, req.body.email],
+      (err, results) => {
+        if (err) throw err;
+        res.json({
+          status: 200,
+          results: "The user has been successfully edited",
+        });
+      }
+    );
+  });
 
-            // Update user
-            router.put("/users/:id", bodyParser.json(), async (req, res) => {
-                const { fullnames, email } = req.body;
-                let sql = `UPDATE users SET ? WHERE id = ${req.params.id} `;
-                const user = {
-                    fullnames, email
-                };
-                db.query(sql, user, (err) => {
-                    if (err) {
-                        res.json({
-                            status: 400,
-                            msg: "Edit Failed.",
-                        });
-                    } else {
-                        res.json({
-                            status: 200,
-                            msg: "Edit Successfull.",
-                        });
-                    }
-                });
-            });
+   // Update user
+//    router.put("/users/:id", bodyParser.json(), async (req, res) => {
+//     const { fullnames, email } = req.body;
+//     let sql = `UPDATE users SET ? WHERE id = ${req.params.id} `;
+//     const user = {
+//         fullnames, email
+//     };
+//     db.query(sql, user, (err) => {
+//         if (err) {
+//             res.json({
+//                 status: 400,
+//                 msg: "Edit Failed.",
+//             });
+//         } else {
+//             res.json({
+//                 status: 200,
+//                 msg: "Edit Successfull.",
+//             });
+//         }
+//     });
+// });
 // CREATE PRODUCT
 router.post('/products', bodyParser.json(), (req, res)=> {
     const bd = req.body; 
