@@ -223,7 +223,7 @@ router.delete('/users/:id', (req, res)=> {
     const editUser = `
           UPDATE users
           SET fullnames = ?, email = ?
-          WHERE id = ${req.params.id}
+          WHERE id = ?
       `;
   
     db.query(
