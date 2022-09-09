@@ -44,7 +44,7 @@ router.post('/users', bodyParser.json(),(req, res)=>{
         if(err) throw err
         // VALIDATION OF USER
         if (results.length > 0) {
-            res.send("The email provided is already registered. Enter another email to successfully register");
+            res.json({msg:"The email provided is already registered. Enter another email to successfully register"});
             
         } else {
             const bd = req.body;
@@ -176,49 +176,7 @@ router.delete('/users/:id', (req, res)=> {
 });
 
 
-// Updating user
-// router.put('/users/:id', bodyParser.json(), (req, res)=> {
-//     const bd = req.body;
-//     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
-//     }
-//     const strQry = 
-//     `UPDATE users
-//      SET ?
-//      WHERE id = ?`;
-//     db.query(strQry,[bd, req.params.id], (err, data)=> {
-//         if(err) throw err;
-
-//          res.status(200).json({msg: "You have updated the user."});
-//     })
-// });
-
-// router.put('/users/:id', bodyParser.json(), (req, res) => {
-
-//     if(bd.userpassword !== null || bd.userpassword !== undefined){ bd.userpassword = bcrypt.hashSync(bd.userpassword, 10);
-//     }
-//     const editUser = `
-//           UPDATE users
-//           SET  fullnames = ?, email = ?,  userpassword = ? 
-//           WHERE id = ${req.params.id}
-//       `;
-  
-//     db.query(
-//         editUser,
-//       [
-//         req.body.fullnames,
-//         req.body.email,
-//         req.body.userpassword,
-//       ],
-//       (err, results) => {
-//         if (err) throw err;
-//         res.json({
-//           status: 200,
-//           results: "The user has been edited succesfully",
-//         });
-//       }
-//     );
-//   });
-
+// UPDATING USER
   router.put("/users/:id", bodyParser.json(), (req, res) => {
     const editUser = `
           UPDATE users
@@ -358,23 +316,6 @@ router.get('/productsType/:type', (req, res)=> {
 });
 
 
-
-
-// UPDATE PRODUCT
-// router.put('/products/:productId', bodyParser.json(), (req, res)=> {
-//     const bd = req.body;
-//     // Query
-//     const strQry = 
-//     `UPDATE products
-//      SET ?
-//      WHERE productId = ?`;
-
-//      db.query(strQry, [bd, req.params.productId], (err, data)=> {
-//         if(err) throw err;
-//         res.send(`number of affected record/s: ${data.affectedRows}`);
-//     })
-// });
-
 // UPDATE PRODUCT
 router.put('/products/:id', bodyParser.json(), (req, res) => {
     const editProduct = `
@@ -418,48 +359,9 @@ router.delete('/products/:productId', (req, res)=> {
 });
 
 
-// router.put("/products/:productId", bodyParser.json(), (req, res) => {
-//     try {
-//         const {
-//             productId, title, category, type, description, size, imgURL, quantity, price, createdBy
-//         } = req.body
-//         const str = `UPDATE products SET ? WHERE productId = ${req.params.productId}`
-
-//         const product = {
-//             // bd.
-//             productId, title, category, type, description, size, imgURL, quantity, price, createdBy
-//         }
-
-//         db.query(str, product, (err, results) => {
-//             if (err) throw err;
-
-//             res.json({
-//                 results,
-//                 msg: "updated product"
-//             })
-//         })
-//     } catch (error) {
-//         throw error
-//     }
-// });
-
 
 
 //CART
-//GET USER'S CART
-// router.get('/users/:id/cart', (req, res)=> {
-//  Query
-// const strQry =
-// `
-// SELECT cart FROM users
-// WHERE id = ?;
-// `;
-// db.query(strQry,[req.params.id], (err, data, fields)=> {
-//     if(err) throw err;
-//     res.send(data[0].cart);
-// })
-// } 
-// );
 
 // GET CART PRODUCTS
 router.get('/users/:id/cart', (req, res)=>{
@@ -483,46 +385,6 @@ router.get('/users/:id/cart', (req, res)=>{
   })
 })
 // ADD TO CART
-// router.post('/users/:id/cart',bodyParser.json(), (req, res)=> {
-    //  Query
-    // const strQry =
-    // `SELECT cart FROM users
-    //  WHERE id = ?;
-    // `;
-    // db.query(strQry,[req.params.id], (err, data, fields)=> {
-    //     if(err) throw err;
-    //     let stan = [];
-    //     if (data[0].cart != null) {
-    //         stan = JSON.parse(data[0].cart)
-    //     }
-    //     const prod = {
-    //         productId: stan.length+1,
-    //         title: "",
-    //         category: "",
-    //         type: "",
-    //         description: "",
-    //         size: "",
-    //         imgURL: "",
-    //         quantity: 100,
-    //         price: 1200
-    //     }
-    //     stan.push(prod)
-    //     // res.send(stan);
-    //     // Query
-    //     const put =
-    //     `
-    //     UPDATE users SET cart = ?
-    //     WHERE id = ?;
-    //     `;
-    //     db.query(put, [JSON.stringify(stan), req.params.id], (err, data, fields)=> {
-    //         if(err) throw err;
-    //         res.send(data);
-    //     })
-    // })
-  
-    // } 
-    // ); 
-
     router.post('/users/:id/cart', bodyParser.json(),(req, res)=>{
         let route = req.params
         const cart = `select cart from users where id = ${route.id}`
@@ -537,14 +399,6 @@ router.get('/users/:id/cart', (req, res)=>{
                     cart = JSON.parse(results[0].cart)
                 }
             let product = {
-                //         title: "",
-                //         category: "",
-                //         type: "",
-                //         description: "",
-                //         size: "",
-                //         imgURL: "",
-                //         quantity: 100,
-                //         price: 1200
                 'cart_id' : cart.length + 1, 
                 'title' : req.body.title,
                 'category':  req.body.category,
@@ -693,47 +547,7 @@ router.delete('/users/:id/cart', (req,res)=>{
         }
     })
   })
-//   router.delete('/users/:id/cart/:cartId', (req,res)=>{
-//         const deleteSingleCart = `
-//             SELECT cart FROM users
-//             WHERE id = ${req.params.id}
-//         `
-//         db.query(deleteSingleCart, (err,results)=>{
-//             if(err) throw err;
-//             if(results.length > 0){
-//                 if(results[0].cart != null){
-//                     const result = JSON.parse(results[0].cart).filter((cart)=>{
-//                         return cart.cart_id != req.params.cartId;
-//                     })
-//                     result.forEach((cart,i) => {
-//                         cart.cart_id = i + 1
-//                     });
-//                     const query = `
-//                         UPDATE users
-//                         SET cart = ?
-//                         WHERE id = ${req.params.id}
-//                     `
-//                     db.query(query, [JSON.stringify(result)], (err,results)=>{
-//                         if(err) throw err;
-//                         res.json({
-//                             status:200,
-//                             result: "Your Product Has Been Taken Out of Your Cart"
-//                         });
-//                     })
-//                 }else{
-//                     res.json({
-//                         status:400,
-//                         result: "You have no Products in Your Cart"
-//                     })
-//                 }
-//             }else{
-//                 res.json({
-//                     status:400,
-//                     result: "There is no user with that id"
-//                 });
-//             }
-//         })
-//   })
+
  
 module.exports = {
     devServer: {
