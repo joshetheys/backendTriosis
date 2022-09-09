@@ -457,16 +457,16 @@ router.get('/users/:id/cart', (req, res)=>{
 // DELETE WHOLE CART
 // router.delete('/users/:id/cart',bodyParser.json(), (req, res)=> {
     // Query
-    const strQry = 
-    `
-        UPDATE users SET cart = null
-        WHERE id = ?;
-        `;
-    db.query(strQry,[req.params.id], (err, data, fields)=> {
-        if(err) throw err;
-        res.send(`${data.affectedRows} rows were affected`);
-    })
-});
+//     const strQry = 
+//     `
+//         UPDATE users SET cart = null
+//         WHERE id = ?;
+//         `;
+//     db.query(strQry,[req.params.id], (err, data, fields)=> {
+//         if(err) throw err;
+//         res.send(`${data.affectedRows} rows were affected`);
+//     })
+// });
 // DELETE SPECIFIC ITEM CART
 // router.delete('/users/:id/cart/:productId',bodyParser.json(), (req, res)=> {
     // Query
