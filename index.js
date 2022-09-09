@@ -291,21 +291,46 @@ router.get('/productsType/:type', (req, res)=> {
 
 
 // UPDATE PRODUCT
-router.put('/products/:productId', bodyParser.json(), (req, res)=> {
-    const bd = req.body;
-    // Query
-    const strQry = 
-    `UPDATE products
-     SET ?
-     WHERE productId = ?`;
+// router.put('/products/:productId', bodyParser.json(), (req, res)=> {
+//     const bd = req.body;
+//     // Query
+//     const strQry = 
+//     `UPDATE products
+//      SET ?
+//      WHERE productId = ?`;
 
-     db.query(strQry, [bd, req.params.productId], (err, data)=> {
-        if(err) throw err;
-        res.send(`number of affected record/s: ${data.affectedRows}`);
-    })
-});
+//      db.query(strQry, [bd, req.params.productId], (err, data)=> {
+//         if(err) throw err;
+//         res.send(`number of affected record/s: ${data.affectedRows}`);
+//     })
+// });
 
-
+// UPDATE PRODUCT
+router.put('/products/:productId', bodyParser.json(), (req, res) => {
+    const editProduct = `
+          UPDATE bookings
+          SET title = ?, imgURL = ?, quantity = ?, price = ?, createdBy= ?
+          WHERE id = ${req.params.id}
+      `;
+  
+    db.query(
+      editProduct,
+      [
+        req.body.title,
+        req.body.imgURL,
+        req.body.quantity,
+        req.body.price,
+        req.body.createdBy
+      ],
+      (err, results) => {
+        if (err) throw err;
+        res.json({
+          status: 200,
+          results: "The product has been edited succesfully",
+        });
+      }
+    );
+  });
 
 // DELETE PRODUCT
 router.delete('/products/:productId', (req, res)=> {
@@ -571,47 +596,47 @@ router.delete('/users/:id/cart', (req,res)=>{
         }
     })
   })
-  router.delete('/users/:id/cart/:cartId', (req,res)=>{
-        const deleteSingleCart = `
-            SELECT cart FROM users
-            WHERE id = ${req.params.id}
-        `
-        db.query(deleteSingleCart, (err,results)=>{
-            if(err) throw err;
-            if(results.length > 0){
-                if(results[0].cart != null){
-                    const result = JSON.parse(results[0].cart).filter((cart)=>{
-                        return cart.cart_id != req.params.cartId;
-                    })
-                    result.forEach((cart,i) => {
-                        cart.cart_id = i + 1
-                    });
-                    const query = `
-                        UPDATE users
-                        SET cart = ?
-                        WHERE id = ${req.params.id}
-                    `
-                    db.query(query, [JSON.stringify(result)], (err,results)=>{
-                        if(err) throw err;
-                        res.json({
-                            status:200,
-                            result: "Your Product Has Been Taken Out of Your Cart"
-                        });
-                    })
-                }else{
-                    res.json({
-                        status:400,
-                        result: "You have no Products in Your Cart"
-                    })
-                }
-            }else{
-                res.json({
-                    status:400,
-                    result: "There is no user with that id"
-                });
-            }
-        })
-  })
+//   router.delete('/users/:id/cart/:cartId', (req,res)=>{
+//         const deleteSingleCart = `
+//             SELECT cart FROM users
+//             WHERE id = ${req.params.id}
+//         `
+//         db.query(deleteSingleCart, (err,results)=>{
+//             if(err) throw err;
+//             if(results.length > 0){
+//                 if(results[0].cart != null){
+//                     const result = JSON.parse(results[0].cart).filter((cart)=>{
+//                         return cart.cart_id != req.params.cartId;
+//                     })
+//                     result.forEach((cart,i) => {
+//                         cart.cart_id = i + 1
+//                     });
+//                     const query = `
+//                         UPDATE users
+//                         SET cart = ?
+//                         WHERE id = ${req.params.id}
+//                     `
+//                     db.query(query, [JSON.stringify(result)], (err,results)=>{
+//                         if(err) throw err;
+//                         res.json({
+//                             status:200,
+//                             result: "Your Product Has Been Taken Out of Your Cart"
+//                         });
+//                     })
+//                 }else{
+//                     res.json({
+//                         status:400,
+//                         result: "You have no Products in Your Cart"
+//                     })
+//                 }
+//             }else{
+//                 res.json({
+//                     status:400,
+//                     result: "There is no user with that id"
+//                 });
+//             }
+//         })
+//   })
  
 module.exports = {
     devServer: {
